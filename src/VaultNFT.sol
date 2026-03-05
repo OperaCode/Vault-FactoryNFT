@@ -4,14 +4,13 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract VaultNFT is ERC721 {
+contract VaultNFT is ERC721, Ownable {
 
     using Strings for uint256;
 
     uint256 public tokenIdCounter;
-
-    address public factory;
 
     struct VaultInfo {
         address vault;
@@ -21,21 +20,17 @@ contract VaultNFT is ERC721 {
 
     mapping(uint256 => VaultInfo) public vaultInfo;
 
-    modifier onlyFactory() {
-        require(msg.sender == factory, "Not factory");
-        _;
-    }
-
-    constructor(address _factory) ERC721("Vault NFT", "VAULT") {
-        factory = _factory;
-    }
+    constructor() 
+        ERC721("Vault NFT", "VAULT") 
+        Ownable(msg.sender) 
+    {}
 
     function mint(
         address to,
         address vault,
         address token,
         uint256 deposited
-    ) external onlyFactory returns (uint256) {
+    ) external onlyOwner returns (uint256) {
 
         tokenIdCounter++;
 
