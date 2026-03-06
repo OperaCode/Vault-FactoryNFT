@@ -7,7 +7,6 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract VaultNFT is ERC721, Ownable {
-
     using Strings for uint256;
 
     uint256 public tokenIdCounter;
@@ -20,10 +19,7 @@ contract VaultNFT is ERC721, Ownable {
 
     mapping(uint256 => VaultInfo) public vaultInfo;
 
-    constructor() 
-        ERC721("Vault NFT", "VAULT") 
-        Ownable(msg.sender) 
-    {}
+    constructor() ERC721("Vault NFT", "VAULT") Ownable(msg.sender) {}
 
     function mint(
         address to,
@@ -31,7 +27,6 @@ contract VaultNFT is ERC721, Ownable {
         address token,
         uint256 deposited
     ) external onlyOwner returns (uint256) {
-
         tokenIdCounter++;
 
         uint256 tokenId = tokenIdCounter;
@@ -47,8 +42,9 @@ contract VaultNFT is ERC721, Ownable {
         return tokenId;
     }
 
-    function tokenURI(uint256 tokenId) public view override returns (string memory) {
-
+    function tokenURI(
+        uint256 tokenId
+    ) public view override returns (string memory) {
         require(_ownerOf(tokenId) != address(0), "Nonexistent");
 
         VaultInfo memory info = vaultInfo[tokenId];
@@ -78,9 +74,8 @@ contract VaultNFT is ERC721, Ownable {
             )
         );
 
-        return string(
-            abi.encodePacked("data:application/json;base64,", metadata)
-        );
+        return
+            string(abi.encodePacked("data:application/json;base64,", metadata));
     }
 
     function _generateSVG(
@@ -89,39 +84,60 @@ contract VaultNFT is ERC721, Ownable {
         address token,
         uint256 deposited
     ) internal pure returns (string memory) {
-
-        return string(
-            abi.encodePacked(
-                "<svg xmlns='http://www.w3.org/2000/svg' width='500' height='500'>",
-
-                "<rect width='100%' height='100%' fill='black'/>",
-
-                "<text x='50%' y='20%' fill='white' font-size='22' text-anchor='middle'>",
-                "ERC20 Factory Vault",
-                "</text>",
-
-                "<text x='50%' y='40%' fill='white' font-size='16' text-anchor='middle'>",
-                "Vault ID: ",
-                tokenId.toString(),
-                "</text>",
-
-                "<text x='50%' y='55%' fill='white' font-size='14' text-anchor='middle'>",
-                "Token: ",
-                Strings.toHexString(uint160(token), 20),
-                "</text>",
-
-                "<text x='50%' y='70%' fill='white' font-size='14' text-anchor='middle'>",
-                "Vault: ",
-                Strings.toHexString(uint160(vault), 20),
-                "</text>",
-
-                "<text x='50%' y='85%' fill='white' font-size='14' text-anchor='middle'>",
-                "Deposited: ",
-                deposited.toString(),
-                "</text>",
-
-                "</svg>"
-            )
-        );
+        return
+            string(
+                abi.encodePacked(
+                    "<svg xmlns='http://www.w3.org/2000/svg' width='500' height='500'>",
+                    // background
+                    "<rect width='100%' height='100%' fill='#0f172a'/>",
+                    // receipt container
+                    "<rect x='40' y='40' width='420' height='420' rx='12' fill='#111827' stroke='#334155' stroke-width='2'/>",
+                    // title
+                    "<text x='250' y='90' fill='white' font-size='26' text-anchor='middle' font-family='monospace'>",
+                    "VAULT RECEIPT",
+                    "</text>",
+                    // divider
+                    "<line x1='80' y1='110' x2='420' y2='110' stroke='#475569' stroke-width='1'/>",
+                    // Vault ID label
+                    "<text x='250' y='150' fill='#94a3b8' font-size='14' text-anchor='middle' font-family='monospace'>",
+                    "Vault #",
+                    "</text>",
+                    // Vault ID value
+                    "<text x='250' y='175' fill='white' font-size='12' text-anchor='middle' font-family='monospace'>",
+                    tokenId.toString(),
+                    "</text>",
+                    // Token label
+                    "<text x='250' y='220' fill='#94a3b8' font-size='14' text-anchor='middle' font-family='monospace'>",
+                    "Token",
+                    "</text>",
+                    // Token value
+                    "<text x='250' y='245' fill='white' font-size='12' text-anchor='middle' font-family='monospace'>",
+                    Strings.toHexString(uint160(token), 20),
+                    "</text>",
+                    // Vault label
+                    "<text x='250' y='290' fill='#94a3b8' font-size='14' text-anchor='middle' font-family='monospace'>",
+                    "Vault Contract",
+                    "</text>",
+                    // Vault value
+                    "<text x='250' y='315' fill='white' font-size='12' text-anchor='middle' font-family='monospace'>",
+                    Strings.toHexString(uint160(vault), 20),
+                    "</text>",
+                    // Deposited label
+                    "<text x='250' y='360' fill='#94a3b8' font-size='14' text-anchor='middle' font-family='monospace'>",
+                    "Deposit Amount",
+                    "</text>",
+                    // Deposit value
+                    "<text x='250' y='385' fill='white' font-size='12' text-anchor='middle' font-family='monospace'>",
+                    deposited.toString(),
+                    "</text>",
+                    // footer divider
+                    "<line x1='80' y1='405' x2='420' y2='405' stroke='#475569' stroke-width='1'/>",
+                    // footer
+                    "<text x='250' y='435' fill='#64748b' font-size='12' text-anchor='middle' font-family='monospace'>",
+                    "ERC20 VAULT FACTORY",
+                    "</text>",
+                    "</svg>"
+                )
+            );
     }
 }
