@@ -97,7 +97,7 @@ contract VaultNFT is ERC721, Ownable {
                 "<rect width='100%' height='100%' fill='black'/>",
 
                 "<text x='50%' y='20%' fill='white' font-size='22' text-anchor='middle'>",
-                "ERC20 Vault",
+                "ERC20 Factory Vault",
                 "</text>",
 
                 "<text x='50%' y='40%' fill='white' font-size='16' text-anchor='middle'>",

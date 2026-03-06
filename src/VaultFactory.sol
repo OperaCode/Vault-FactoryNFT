@@ -33,24 +33,31 @@ contract VaultFactory {
 
     function deposit(address token, uint256 amount) external {
 
-        require(amount > 0, "amount zero");
+    require(amount > 0, "amount zero");
 
-        address vault = vaultForToken[token];
+    address vault = vaultForToken[token];
 
-        if (vault == address(0)) {
-            vault = createVault(token);
-        }
-
-        IERC20(token).transferFrom(msg.sender, vault, amount);
-
-        vaultNFT.mint(
-            msg.sender,
-            vault,
-            token,
-            amount
-        );
-
-        emit Deposited(msg.sender, vault, amount);
+    if (vault == address(0)) {
+        vault = createVault(token);
     }
+
+    // transfer tokens to factory first
+    IERC20(token).transferFrom(msg.sender, address(this), amount);
+
+    // approve vault
+    IERC20(token).approve(vault, amount);
+
+    // deposit into vault
+    Vault(vault).deposit(amount);
+
+    vaultNFT.mint(
+        msg.sender,
+        vault,
+        token,
+        amount
+    );
+
+    emit Deposited(msg.sender, vault, amount);
+}
 
 }

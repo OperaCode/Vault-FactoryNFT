@@ -34,8 +34,6 @@ contract VaultTest is Test {
         nft.transferOwnership(address(factory));
     }
 
-    // MAIN FUNCTIONAL TEST
-
     function testTokenURI() public {
         vm.startPrank(USDC_WHALE);
 
@@ -70,8 +68,6 @@ contract VaultTest is Test {
         assertEq(nft.balanceOf(USDC_WHALE), 1);
     }
 
-    // VAULT NOT REDEPLOYED
-
     function testVaultNotRedeployed() public {
         vm.startPrank(USDC_WHALE);
 
@@ -89,16 +85,12 @@ contract VaultTest is Test {
 
         assertEq(vault1, vault2);
     }
-
-    // ZERO DEPOSIT REVERT
-
+ 
     function testDepositRevertsIfZero() public {
         vm.expectRevert("amount zero");
 
         factory.deposit(USDC, 0);
     }
-
-    // CREATE2 ADDRESS TEST
 
     function testCreate2DeterministicAddress() public {
         bytes32 salt = keccak256(abi.encode(USDC));
